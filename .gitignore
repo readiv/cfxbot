@@ -2,8 +2,15 @@
 __pycache__/
 *.py[cod]
 *$py.class
+#my
+*.csv
+config.py
+logs/
+*.xlsx
+diff.txt
+price.txt
 
-# C extensions
+# C extedsions
 *.so
 
 # Distribution / packaging
