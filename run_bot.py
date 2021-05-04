@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import datetime
 import logger, csv, config
-from nicehash_emu import Nice
+from nicehash import Nice
 
 log = logger.get_logger(__name__)
 
