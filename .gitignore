@@ -9,6 +9,7 @@ logs/
 *.xlsx
 diff.txt
 price.txt
+*.json
 
 # C extedsions
 *.so
