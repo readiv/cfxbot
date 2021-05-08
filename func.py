@@ -56,7 +56,7 @@ def calc_order_param(max_price, market, balance_available):
     y1 = float(temp["fixedPrice"])
     y2 = float(private_api.get_hashpower_fixedprice(market, algorithm, x2)["fixedPrice"])
     if x2 == 0 or y1 == 0 or y2 == 0 or y1 > max_price:
-        log.error(f"Error: x2:{x2} == 0 or y1:{y1} == 0 or y2:{y2} == 0 or y1:{y1} > max_price:{max_price}")
+        log.error(f"Error: x2: {x2} == 0 or y1: {y1} == 0 or y2: {y2} == 0 or y1: {y1} > max_price: {max_price}")
         return None, None, None
     if y2 < max_price:
         limit_power = 2 * x2 / 3 # 2/3 от расчетной
@@ -80,7 +80,7 @@ def calc_order_param(max_price, market, balance_available):
     if amount<0.001:
         amount = 0.001
     if balance_available < 0.001: 
-        log.error(f"Balance is close to zero. amount= {amount} balance_available = {balance_available}")
+        log.error(f"Balance is close to ZERO. amount= {amount} balance_available = {balance_available}")
         return None, None, None
     if amount > balance_available:
         limit_power = round(0.99 * (limit_power * balance_available - 0.0005) / amount,3)

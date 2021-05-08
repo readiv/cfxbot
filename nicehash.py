@@ -24,7 +24,7 @@ class Avg_price(object):
         self.n = [0,0,0,0]
         self.p = [0,0,0,0]
 
-    def add(self, i:int, price):
+    def add(self, i:int, price:float):
         """ Добавляет один элемент для подсчета среднего"""
         if i<0 or i>4:
             return
@@ -49,7 +49,7 @@ class Order(object):
     def __init__(self, market:str, diff:int, price_BTC_TH_day, limit_TH_s, amount_BTC):
         """Constructor"""
         self.market = market
-        # self.diff = diff
+        self.diff = diff
         # self.timer = 0
         self.price_BTC_TH_day = price_BTC_TH_day
         self.limit_TH_s = limit_TH_s
@@ -133,6 +133,7 @@ class Nice(object):
         self.orders = []
         self.avg = Avg_price()
         self.update_from_nicehash()
+        
 
     def market_is_present_in_orders(self, market):
         result = False
@@ -168,7 +169,10 @@ class Nice(object):
         return price
 
     def get_price_nh(self, market, limit_TH_s):
-        return private_api.get_hashpower_fixedprice(market, config.algorithm, 0.001) 
+        try:
+            return float(private_api.get_hashpower_fixedprice(market, config.algorithm, 0.001)["fixedPrice"])
+        except:
+            return 0.0
 
     def get_order(self, market):
         order_r = None
@@ -210,6 +214,9 @@ class Nice(object):
         #Определить максимальнуб цену
         max_price = max_profit_price * k_price_estimated   
         price, limit_TH_s, amount_BTC = func.calc_order_param(max_price, market, self.balance_BTC)  
+        if price is None or price == 0 or limit_TH_s == 0 or amount_BTC == 0:
+            log.error(f"price = {price} limit_TH_s = {limit_TH_s} amount_BTC = {amount_BTC}")
+            return False
         if not reorder: #Выставить новый ордер start_order_one
             if self.start_order_one(market, diff, price, limit_TH_s, amount_BTC, max_profit_price):
                 log.info(f"The order was launched successfully. price_BTC_TH_day = {max_price} limit_TH_s = {limit_TH_s} amount_BTC = {amount_BTC}")
