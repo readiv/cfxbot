@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from datetime import datetime,timedelta
+from time import sleep
 from func import get_api, time2float
 import logger, csv, config, confluxscan, func, os
 from nicehash import Nice
@@ -32,11 +33,12 @@ if __name__ == "__main__":
             csvwriter.writerow(row)
         i = 0
         while True:
-            # i += 1
+            i += 1
             diff_now = confluxscan.get_difficulty()
             # log.info(f"difficulty={diff_now}")
             if diff_now == 0:
                 log.error(f"difficulty = 0")
+                sleep(2)
                 continue #Сложность не может быть равна нулю
             time_now = datetime.now() #2021-03-24 19:41:07.198087                   
   
@@ -52,7 +54,7 @@ if __name__ == "__main__":
             nice.update_from_nicehash() #Актуализация информации
             nice.check_and_add_amount() #Пополняем ордера
             #Условия переключения состояний
-            if (state["state"] == "down" or state["state"] == "up") and diff_now > config.k_down_up * state["diff"] or i % 400 == 1: #Сложность повысилась
+            if (state["state"] == "down" or state["state"] == "up") and diff_now > config.k_down_up * state["diff"] or i == 3: #Сложность повысилась
                 state["state"] = "up_2m"
                 state["time_start"] = time_now
                 state["deadline"] = config.time_2m # Действует секунд
@@ -68,7 +70,7 @@ if __name__ == "__main__":
                     nice.avg_reset()
                     log.info(f"new state = {state['state']} diff_old = {state['diff']} diff_new = {diff_now} state = up")
     
-            if (state["state"] == "down" or state["state"] == "up") and diff_now < config.k_up_down * state["diff"] or i % 400 == 200: #Сложность упала
+            if (state["state"] == "down" or state["state"] == "up") and diff_now < config.k_up_down * state["diff"] or i == -1 : #Сложность упала
                 state["state"] = "down_2m"
                 state["time_start"] = time_now
                 state["deadline"] = config.time_2m # Действует time_2m секунд
