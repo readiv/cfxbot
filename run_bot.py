@@ -33,18 +33,19 @@ if __name__ == "__main__":
             csvwriter.writerow(row)
         i = 0
         while True:
-            # i += 1
+            i += 1
             diff_now = confluxscan.get_difficulty()
             # log.info(f"difficulty={diff_now}")
-            if diff_now == 0:
+            if diff_now == 0:   
                 log.error(f"difficulty = 0")
                 sleep(2)
                 continue #Сложность не может быть равна нулю
             time_now = datetime.now() #2021-03-24 19:41:07.198087                   
   
-            price_BTC = get_api("https://conflux.herominers.com/api/get_market?tickers%5B%5D=CFX-BTC")[0]["price"]
+            price_BTC = get_api("https://conflux.herominers.com/api/get_market?tickers%5B%5D=CFX-BTC")
+            
             if price_BTC is not None:
-                price_BTC = float(price_BTC)
+                price_BTC = float(price_BTC[0]["price"])
             else:
                 continue #Курс тоже не может быть равен нулю
 

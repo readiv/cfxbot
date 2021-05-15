@@ -65,7 +65,7 @@ class Order(object):
         try:
             if self.order_id == None:
                 return False
-            req_json = nicehash_api.get_order_details(self.order_id)
+            req_json = private_api.get_order_details(self.order_id) #Эта ошибка обошлась в 350 евро.
             self.amount_BTC = float(req_json["availableAmount"])
             self.estimateDurationInSeconds = int(req_json["estimateDurationInSeconds"])
             if req_json["status"]["code"] not in ["PENDING", "ACTIVE"]: #Статус неверный. Останавливаем ордер.
@@ -215,7 +215,7 @@ class Nice(object):
         max_price = max_profit_price * k_price_estimated   
         price, limit_TH_s, amount_BTC = func.calc_order_param(max_price, market, self.balance_BTC)  
         if price is None or price == 0 or limit_TH_s == 0 or amount_BTC == 0:
-            log.error(f"price = {price} limit_TH_s = {limit_TH_s} amount_BTC = {amount_BTC}")
+            # log.error(f"price = {price} limit_TH_s = {limit_TH_s} amount_BTC = {amount_BTC}")
             return False
         if not reorder: #Выставить новый ордер start_order_one
             if self.start_order_one(market, diff, price, limit_TH_s, amount_BTC, max_profit_price):
