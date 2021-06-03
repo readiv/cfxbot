@@ -33,7 +33,7 @@ if __name__ == "__main__":
             csvwriter.writerow(row)
         i = 0
         while True:
-            i += 1
+            # i += 1
             diff_now = confluxscan.get_difficulty()
             # log.info(f"difficulty={diff_now}")
             if diff_now == 0:   

@@ -120,6 +120,7 @@ class Order(object):
 
     def __del__(self): #При удалении ордера остановить его на nicehash
         if not config.no_order and self.order_id is not None:
+            log.info(f"The order stoped. order_id = {self.order_id} market = {self.market} amount_BTC = {self.amount_BTC}")
             private_api.cancel_hashpower_order(self.order_id)
 
 class Nice(object):
@@ -270,7 +271,7 @@ class Nice(object):
         """ Пополняем ордер 1 час если ему осталось жить 30 минут = 1800 секунд """
         for order in self.orders:
             time_live = order.get_time_live()
-            if time_live < 1800 and order.timer + time_live < 24 * 60 * 60:
+            if time_live < 1800:
                 time_amount = config.time_order * 60 * 60
                 amount_BTC = round(order.limit_TH_s * order.price_BTC_TH_day * time_amount / 24 / 60 / 60 + 0.0005, 3)
                 if amount_BTC > self.balance_BTC:
